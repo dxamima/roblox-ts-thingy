@@ -1,15 +1,6 @@
 import { CenturionType, Command, CommandContext, Group, Guard, Register, CommandGuard } from "@rbxts/centurion";
 import IsAdminGuard from "../Guards/IsAdminGuard";
 
-const isAdmin: CommandGuard = (ctx) => {
-	if (ctx.executor.UserId !== 3284442274) {
-		ctx.error("Insufficient permission! Make sure your UserId is in AuthorizedUsers.ts");
-		return false;
-	}
-
-	return true;
-};
-
 @Register({ groups: [{ name: "Moderation" }] })
 class KickCommand {
 	@Command({
@@ -21,11 +12,16 @@ class KickCommand {
 				description: "Player to kick",
 				type: CenturionType.Player,
 			},
+			{
+				name: "reason",
+				description: "The reason for the kick",
+				type: CenturionType.String,
+			},
 		],
 	})
-	@Guard(isAdmin)
-	kick(ctx: CommandContext, player: Player) {
-		player.Kick("You have been kicked from the server.");
+	@Guard(IsAdminGuard)
+	kick(ctx: CommandContext, player: Player, reason: string) {
+		player.Kick(`You hae been kicked from the server by ${ctx.executor.Name} for ${reason}`);
 		ctx.reply(`Successfully kicked ${player.Name}`);
 	}
 }

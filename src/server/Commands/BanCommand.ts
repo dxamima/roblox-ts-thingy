@@ -2,15 +2,6 @@ import { CenturionType, Command, CommandContext, Group, Guard, Register, Command
 import IsAdminGuard from "../Guards/IsAdminGuard";
 import { Players } from "@rbxts/services";
 
-const isAdmin: CommandGuard = (ctx) => {
-	if (ctx.executor.UserId !== 3284442274) {
-		ctx.error("Insufficient permission! Make sure your UserId is in AuthorizedUsers.ts");
-		return false;
-	}
-
-	return true;
-};
-
 @Register({ groups: [{ name: "Moderation" }] })
 class BanCommand {
 	@Command({
@@ -35,7 +26,7 @@ class BanCommand {
 			},
 		],
 	})
-	@Guard(isAdmin)
+	@Guard(IsAdminGuard)
 	ban(ctx: CommandContext, player: Player, reason: string, duration = -1) {
 		Players.BanAsync({
 			UserIds: [player.UserId],
